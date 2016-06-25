@@ -14,13 +14,13 @@ var config = require('yargs')
     alias: 'publishDir',
     type: 'string',
     default: '.publish',
-    describe: 'When publishing to GitHub pages, this directory will be created to publish from.'
+    describe: 'When publishing to GitHub pages, this directory will be created to publish from. An absolute or relative path can be used. Relative paths will be resolved from the project root.'
   })
   .option('d', {
     alias: 'deletePublishDir',
     type: 'boolean',
     default: false,
-    describe: 'If true, the publishDir will be recursively deleted when the script has finished.'
+    describe: 'If true, the publishDir will be recursively deleted when the script has finished. If you delete the publish directory, performance will be slower because the cache is being deleted.'
   })
   .option('u', {
     alias: 'allowUncommitted',
