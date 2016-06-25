@@ -7,7 +7,7 @@ var config = require('yargs')
   .option('s', {
     alias: 'srcDir',
     type: 'string',
-    default: 'gh-pages',
+    default: 'dist',
     describe: 'The source directory that you want to publish to the gh-pages branch. This directory will become the root directory of the gh-pages branch.'
   })
   .option('p', {
@@ -52,20 +52,21 @@ function logToConsole(msg) {
 sh.config.verbose = config.outputLevel >= 2
 sh.config.silent = !(config.outputLevel >= 3)
 
-if (!config.allowUncommitted && sh.exec('git diff --exit-code && git diff --staged --exit-code').code !== 0)
-  throw new Error('You have uncommitted changes! Please commit your files and then try again.')
+if (!config.allowUncommitted && sh.exec('git diff --exit-code && git diff --staged --exit-code').code !== 0) {
+  logToConsole('You have uncommitted changes! Please commit your files and then try again.')
+  deletePublishDir()
+  return process.exit(1)
+}
 
 sh.mkdir('-p', config.publishDir)
 sh.cd(config.publishDir)
 
-if (sh.ls('.git').code !== 0) {
+if (sh.ls('.git').code !== 0)
   sh.exec('git clone ' + remoteUrl + ' .')
-}
 
-var branches = sh.exec('git branch -a')
-if (branches.indexOf('gh-pages') === -1)
-  sh.exec('git branch gh-pages')
-sh.exec('git checkout gh-pages')
+// if (sh.exec('git branch -a').indexOf('gh-pages') === -1)
+//   sh.exec('git branch gh-pages')
+sh.exec('git checkout -b gh-pages')
 
 var sourcePath = path.resolve(projectRoot, config.srcDir, '*')
 sh.exec('git rm -r .')
@@ -82,7 +83,9 @@ else {
   logToConsole('Successfully deployed to origin/gh-pages.')
 }
 
+deletePublishDir()
+
 function deletePublishDir() {
   if (config.deletePublishDir)
-    sh.rm('-rf')
+    sh.rm('-rf', config.publishDir)
 }
