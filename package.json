@@ -1,0 +1,33 @@
+{
+  "name": "deploy-gh-pages",
+  "version": "1.0.0",
+  "description": "A command line utility for deploying to a gh-pages branch.",
+  "main": "index.js",
+  "license": "ISC",
+  "author": {
+    "name": "Josh Egan",
+    "url": "https://github.com/josh-egan"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josh-egan/deploy-gh-pages.git"
+  },
+  "bugs": {
+    "url": "https://github.com/josh-egan/deploy-gh-pages/issues"
+  },
+  "homepage": "https://github.com/josh-egan/deploy-gh-pages#readme",
+  "bin": {
+    "deploy-gh-pages": "index.js"
+  },
+  "dependencies": {
+    "shelljs": "0.7.0",
+    "yargs": "4.7.1"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "github",
+    "pages",
+    "gh-pages",
+    "deploy"
+  ]
+}
