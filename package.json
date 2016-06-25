@@ -19,6 +19,9 @@
   "bin": {
     "deploy-gh-pages": "index.js"
   },
+  "scripts": {
+    "deploy": "./index.js"
+  },
   "dependencies": {
     "shelljs": "0.7.0",
     "yargs": "4.7.1"
