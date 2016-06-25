@@ -28,3 +28,7 @@ To see all available options, use the CLI help command:
 The project pages for this repository are deployed as an example:
 
 https://josh-egan.github.io/deploy-gh-pages/
+
+## Acknowledgements
+
+This project was inspired by the project over at https://github.com/wangzuo/github-pages-deploy
