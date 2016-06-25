@@ -32,7 +32,7 @@ var config = require('yargs')
     alias: 'outputLevel',
     type: 'number',
     default: 1,
-    choices: [0,1,2,3],
+    choices: [0, 1, 2, 3],
     describe: 'The verbosity of the output from 0 (no output) to 3 (verbose output).'
   })
   .usage('Usage: $0 [options]')
@@ -40,9 +40,6 @@ var config = require('yargs')
   .help('h')
   .alias('h', 'help')
   .argv
-
-var projectRoot = process.cwd()
-var remoteUrl = sh.exec('git config --get remote.origin.url').trim()
 
 function logToConsole(msg) {
   if (config.outputLevel >= 1)
@@ -52,25 +49,29 @@ function logToConsole(msg) {
 sh.config.verbose = config.outputLevel >= 2
 sh.config.silent = !(config.outputLevel >= 3)
 
+var projectRoot = process.cwd()
+var absoluteSourceDir = path.resolve(projectRoot, config.srcDir)
+var absolutePublishDir = path.resolve(projectRoot, config.publishDir)
+var remoteUrl = sh.exec('git config --get remote.origin.url').trim()
+
 if (!config.allowUncommitted && sh.exec('git diff --exit-code && git diff --staged --exit-code').code !== 0) {
   logToConsole('You have uncommitted changes! Please commit your files and then try again.')
   deletePublishDir()
   return process.exit(1)
 }
 
-sh.mkdir('-p', config.publishDir)
-sh.cd(config.publishDir)
+sh.mkdir('-p', absolutePublishDir)
+sh.cd(absolutePublishDir)
 
 if (sh.ls('.git').code !== 0)
   sh.exec('git clone ' + remoteUrl + ' .')
 
-// if (sh.exec('git branch -a').indexOf('gh-pages') === -1)
-//   sh.exec('git branch gh-pages')
-sh.exec('git checkout -b gh-pages')
+if (sh.exec('git branch -a').indexOf('gh-pages') === -1)
+  sh.exec('git branch gh-pages')
+sh.exec('git checkout gh-pages')
 
-var sourcePath = path.resolve(projectRoot, config.srcDir, '*')
 sh.exec('git rm -r .')
-sh.cp('-R', sourcePath, '.')
+sh.cp('-R', path.join(absoluteSourceDir, '*'), '.')
 sh.exec('git add -A .')
 
 if (sh.exec('git diff --staged --exit-code').code === 0) {
@@ -87,5 +88,5 @@ deletePublishDir()
 
 function deletePublishDir() {
   if (config.deletePublishDir)
-    sh.rm('-rf', config.publishDir)
+    sh.rm('-rf', absolutePublishDir)
 }
