@@ -87,6 +87,11 @@ else {
 deletePublishDir()
 
 function deletePublishDir() {
-  if (config.deletePublishDir)
-    sh.rm('-rf', absolutePublishDir)
+  if (!config.deletePublishDir)
+    return
+
+  while (sh.pwd().indexOf(absolutePublishDir) >= 0)
+    sh.cd('..')
+
+  sh.rm('-rf', absolutePublishDir)
 }
