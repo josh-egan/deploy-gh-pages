@@ -36,7 +36,7 @@ var config = require('yargs')
     describe: 'The verbosity of the output from 0 (no output) to 3 (verbose output).'
   })
   .usage('Usage: $0 [options]')
-  .example('$0 -c -s dist', 'Publish the contents of the `dist` directory to the gh-pages branch and delete the publish directory afterwards.')
+  .example('$0 -d -s dist', 'Publish the contents of the `dist` directory to the gh-pages branch and delete the publish directory afterwards.')
   .help('h')
   .alias('h', 'help')
   .argv
